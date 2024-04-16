@@ -1,5 +1,5 @@
-# HappyScrappy
-![img](./utils/logo.png)
+# Happy Scrappy
+![Logo](./utils/logo.png)
 
 
 ## Working on:
