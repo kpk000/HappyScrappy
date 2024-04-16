@@ -6,9 +6,16 @@ import pc from "picocolors";
 import fs from "node:fs/promises";
 import logUpdate from "log-update";
 import { log } from "node:console";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const jsonPath = path.resolve(__dirname, "basket.json");
 
 config();
-const { EMAIL, PASSWORD } = process.env;
+const { AMAZON_EMAIL, AMAZON_PASSWORD } = process.env;
 const browser = await puppeteer.launch({
   headless: false,
   slowMo: 10,
@@ -27,10 +34,10 @@ async function login() {
     logUpdate(pc.yellow("[+] Trying to signin..."));
 
     await page.waitForSelector("#ap_email", { visible: true });
-    await page.type("#ap_email", EMAIL);
+    await page.type("#ap_email", AMAZON_EMAIL);
     await page.click("#continue");
     await page.waitForSelector("#ap_password", { visible: true });
-    await page.type("#ap_password", PASSWORD);
+    await page.type("#ap_password", AMAZON_PASSWORD);
     await page.waitForSelector("#signInSubmit", { visible: true });
     await Promise.all([
       page.waitForNavigation({ waitUntil: "domcontentloaded" }),
@@ -87,11 +94,11 @@ async function basketObserver() {
 
 async function evaluateItems(newItems) {
   try {
-    const data = await fs.readFile("basket.json", "utf-8");
+    const data = await fs.readFile(jsonPath, "utf-8");
     const oldItems = JSON.parse(data);
     if (Object.keys(oldItems).length === 0) {
       logUpdate(pc.green("[+] First time running, saving basket..."));
-      await fs.writeFile("basket.json", JSON.stringify(newItems, null, 2));
+      await fs.writeFile(jsonPath, JSON.stringify(newItems, null, 2));
       return;
     }
 
@@ -102,7 +109,7 @@ async function evaluateItems(newItems) {
         checkForChanges(oldItems[key], newItems[key]);
       }
     });
-    await fs.writeFile("basket.json", JSON.stringify(newItems, null, 2));
+    await fs.writeFile(jsonPath, JSON.stringify(newItems, null, 2));
     if (newItemsKeys.length !== oldItemsKeys.length) {
       logUpdate(
         pc.green(
