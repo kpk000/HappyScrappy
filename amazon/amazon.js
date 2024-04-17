@@ -6,18 +6,18 @@ import pc from "picocolors";
 import fs from "node:fs/promises";
 import logUpdate from "log-update";
 import { log } from "node:console";
-import path from "node:path";
+import path, { parse } from "node:path";
 import { fileURLToPath } from "node:url";
+import { sendAmzMessageTelegram } from "./bot.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+config({ path: path.resolve(__dirname, "../.env") });
 const jsonPath = path.resolve(__dirname, "basket.json");
 
-config();
 const { AMAZON_EMAIL, AMAZON_PASSWORD } = process.env;
 const browser = await puppeteer.launch({
-  headless: false,
+  headless: true,
   slowMo: 10,
 
   args: ["--start-maximized"],
@@ -76,10 +76,15 @@ async function basketObserver() {
     const totalItems = [...basketItems, ...wishlist];
     const parsedItems = totalItems.map((item) => {
       return {
+        title:
+          item.querySelector(".sc-product-title").textContent.trim() || null,
         asin: item.getAttribute("data-asin"),
         stock: item.getAttribute("data-outofstock"),
         price: item.getAttribute("data-price"),
         img: item.querySelector(".sc-product-image").src,
+        badge: JSON.parse(item.getAttribute("data-subtotal"))["subtotal"][
+          "code"
+        ],
       };
     });
 
@@ -113,9 +118,9 @@ async function evaluateItems(newItems) {
     if (newItemsKeys.length !== oldItemsKeys.length) {
       logUpdate(
         pc.green(
-          `[+] Basket updated ${Math.abs(
+          `[+] Basket updated, ${Math.abs(
             oldItemsKeys.length - newItemsKeys.length
-          )}`
+          )} items removed or added`
         )
       );
     }
@@ -131,8 +136,8 @@ function checkForChanges(oldItem, newItem) {
   const oldItemKeys = Object.keys(oldItem);
   const newItemKeys = Object.keys(newItem);
   oldItemKeys.forEach((key) => {
-    if (oldItem[key] !== newItem[key]) {
-      logUpdate(pc.yellow(`[+] ${oldItem.asin} : ${oldItem[key]} has changed`));
+    if (!oldItem[key] === newItem[key]) {
+      logUpdate(pc.blue(`[+] ${oldItem.asin} : "${key}" has changed`));
       if (key === "price") {
         notifyPriceChange(oldItem, newItem);
       }
@@ -140,17 +145,31 @@ function checkForChanges(oldItem, newItem) {
   });
 }
 
-function notifyPriceChange(oldItem, newItem) {
-  const oldPrice = oldItem.price;
-  const newPrice = newItem.price;
-  if (oldPrice > newPrice) {
-    console.log(
-      pc.green(`[+] Price of ${oldItem.asin} has decreased\n
-    Old Price: ${oldPrice}\n
-    New Price: ${newPrice}`)
+async function notifyPriceChange(oldItem, newItem) {
+  const oldPrice = parseFloat(oldItem.price);
+  const newPrice = parseFloat(newItem.price);
+  const badge = newItem.badge;
+  const message = `<b>AMAZON</b>\nPrice of <i>${oldItem.title?.substring(
+    0,
+    15
+  )}...</i> has ${
+    oldPrice > newPrice ? "decreased" : "increased"
+  }\n- Old Price: ${oldPrice} ${badge}\n- New Price: ${newPrice} ${badge}`;
+
+  let res;
+
+  res = await sendAmzMessageTelegram(message, newItem.img);
+
+  if (res) {
+    logUpdate(
+      pc.green(
+        `[+] Price of item "${newItem.asin}" has change, notification sent`
+      )
     );
   } else {
-    console.log(pc.red(`[-] Price of ${oldItem.asin} has increased`));
+    logUpdate(
+      pc.red(`[-] Error sending notification for item "${newItem.asin}"`)
+    );
   }
 }
 
@@ -159,6 +178,6 @@ async function main() {
   setInterval(async () => {
     await page.reload({ waitUntil: "networkidle0" });
     await basketObserver(page);
-  }, 10000);
+  }, 20000);
 }
 main();
