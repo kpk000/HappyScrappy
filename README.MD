@@ -3,10 +3,19 @@
 ![Logo](./utils/logo.png)
 
 
+## Description
+- HappyScrappy keeps watching your cart from your online stores, updating itself every moment and notifies you if any important attribute such as "stock" or "price" changes.
 
 ## Working platforms:
-- Amazon
+- **Amazon**: Watchs your *Amazon Cart* and *Amazon Saved For Later* section, if the price of any product changes, it notifys you via the *Notification Platforms*.
 
 
-## Description
-- HappyScrappy keeps observing your basket from your online stores, updating itself every moment and notifies you if any important attribute such as "stock" or "price" changes.
+## Notification Platforms
+- **Telegram Bot**: Introduce your BOT TOKEN and CHAT ID in the `.env`.
+
+
+
+  
+
+
+

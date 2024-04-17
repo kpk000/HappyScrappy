@@ -149,12 +149,12 @@ async function notifyPriceChange(oldItem, newItem) {
   const oldPrice = parseFloat(oldItem.price);
   const newPrice = parseFloat(newItem.price);
   const badge = newItem.badge;
-  const message = `<b>AMAZON</b>\nPrice of <i>${oldItem.title?.substring(
+  const message = `<u><b>AMAZON CART</b></u>\nPrice of <i>${oldItem.title?.substring(
     0,
     15
-  )}...</i> has ${
+  )}...</i> has <u>${
     oldPrice > newPrice ? "decreased" : "increased"
-  }\n- Old Price: ${oldPrice} ${badge}\n- New Price: ${newPrice} ${badge}`;
+  }.</u>\n\n- Old Price: ${oldPrice} ${badge}\n- New Price: ${newPrice} ${badge}`;
 
   let res;
 
