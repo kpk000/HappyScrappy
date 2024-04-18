@@ -8,13 +8,12 @@ import logUpdate from "log-update";
 import { log } from "node:console";
 import path, { parse } from "node:path";
 import { fileURLToPath } from "node:url";
-import { sendAmzMessageTelegram } from "./bot.mjs";
+import { sendAmzMessageTelegram } from "../utils/telegramBot.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 config({ path: path.resolve(__dirname, "../.env") });
-const jsonPath = path.resolve(__dirname, "basket.json");
-
+const jsonPath = path.resolve(__dirname, "cart.json");
 const { AMAZON_EMAIL, AMAZON_PASSWORD } = process.env;
 const browser = await puppeteer.launch({
   headless: true,
@@ -59,7 +58,7 @@ async function login() {
         page.click("#nav-cart"),
       ]);
 
-      logUpdate(pc.green("[+] Navigating to basket"));
+      logUpdate(pc.green("[+] Navigating to cart"));
       basketObserver();
     }
   } else {
@@ -69,7 +68,7 @@ async function login() {
 }
 
 async function basketObserver() {
-  logUpdate(pc.yellow("[+] Observing basket"));
+  logUpdate(pc.yellow("[+] Watching amazon cart"));
   const items = await page.evaluate(() => {
     const basketItems = document.querySelectorAll('[data-itemtype="active"]');
     const wishlist = document.querySelectorAll('[data-itemtype="saved"]');
@@ -102,7 +101,7 @@ async function evaluateItems(newItems) {
     const data = await fs.readFile(jsonPath, "utf-8");
     const oldItems = JSON.parse(data);
     if (Object.keys(oldItems).length === 0) {
-      logUpdate(pc.green("[+] First time running, saving basket..."));
+      logUpdate(pc.green("[+] First time running, saving cart..."));
       await fs.writeFile(jsonPath, JSON.stringify(newItems, null, 2));
       return;
     }
@@ -118,9 +117,9 @@ async function evaluateItems(newItems) {
     if (newItemsKeys.length !== oldItemsKeys.length) {
       logUpdate(
         pc.green(
-          `[+] Basket updated, ${Math.abs(
+          `[+] Cart updated, ${Math.abs(
             oldItemsKeys.length - newItemsKeys.length
-          )} items removed or added`
+          )} items removed or added.`
         )
       );
     }
@@ -136,7 +135,7 @@ function checkForChanges(oldItem, newItem) {
   const oldItemKeys = Object.keys(oldItem);
   const newItemKeys = Object.keys(newItem);
   oldItemKeys.forEach((key) => {
-    if (!oldItem[key] === newItem[key]) {
+    if (oldItem[key] !== newItem[key]) {
       logUpdate(pc.blue(`[+] ${oldItem.asin} : "${key}" has changed`));
       if (key === "price") {
         notifyPriceChange(oldItem, newItem);
@@ -146,13 +145,14 @@ function checkForChanges(oldItem, newItem) {
 }
 
 async function notifyPriceChange(oldItem, newItem) {
+  const amazonLink = `https://www.amazon.es/gp/product/${newItem.asin}/`;
   const oldPrice = parseFloat(oldItem.price);
   const newPrice = parseFloat(newItem.price);
   const badge = newItem.badge;
-  const message = `<u><b>AMAZON CART</b></u>\nPrice of <i>${oldItem.title?.substring(
+  const message = `<u><b>AMAZON CART</b></u>\nPrice of <a href="${amazonLink}">${oldItem.title?.substring(
     0,
-    15
-  )}...</i> has <u>${
+    30
+  )}...</a> has <u>${
     oldPrice > newPrice ? "decreased" : "increased"
   }.</u>\n\n- Old Price: ${oldPrice} ${badge}\n- New Price: ${newPrice} ${badge}`;
 
@@ -163,7 +163,7 @@ async function notifyPriceChange(oldItem, newItem) {
   if (res) {
     logUpdate(
       pc.green(
-        `[+] Price of item "${newItem.asin}" has change, notification sent`
+        `[+] Price of item "${newItem.asin}" has change, notification sent.`
       )
     );
   } else {
