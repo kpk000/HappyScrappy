@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import puppeteer from "puppeteer-extra";
 import { config } from "dotenv";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
@@ -53,8 +54,7 @@ async function login() {
         console.log(
           pc.red("[-] Login failed, check your credentials and try again.")
         );
-        browser.close();
-        process.exit(1);
+        login();
       }
       logUpdate(pc.green("[+] Logged in successfully"));
 
@@ -203,7 +203,7 @@ async function checkUpdates(newItems) {
 async function checkForChanges(oldItem, newItem) {
   const oldItemKeys = Object.keys(oldItem);
   const newItemKeys = Object.keys(newItem);
-  const relevantKeys = ["stock", "price", "available"];
+  const relevantKeys = ["stock", "price"];
   let messages = [];
   oldItemKeys.forEach((key) => {
     if (oldItem[key] !== newItem[key] && relevantKeys.includes(key)) {

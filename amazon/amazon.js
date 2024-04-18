@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import puppeteer from "puppeteer-extra";
 import { config } from "dotenv";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
