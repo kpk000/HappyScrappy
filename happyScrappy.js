@@ -29,23 +29,43 @@ const argv = yargs(hideBin(process.argv))
   .alias("help", "h")
   .parse();
 
-function runScraper(scraperName) {
+let subprocesses = [];
+
+function terminateAll(reason) {
+  console.log(pc.red(`[-] Terminating all processes due to: ${reason}`));
+  subprocesses.forEach((proc) => {
+    if (!proc.killed) {
+      proc.kill("SIGTERM");
+    }
+  });
+  // Ensure the main process exits with an error code
+  process.exit(1);
+}
+
+function runScraper(scraperName, scraperPath) {
   console.log(pc.green(`[+] Running scraper ${scraperName}`));
-  const scraper = spawn("node", [scraperName], { stdio: "inherit" });
+  const scraper = spawn("node", [scraperPath], { stdio: "inherit" });
 
   scraper.on("close", (code) => {
     console.log(pc.red(`[-] Scraper ${scraperName} exited with code ${code}`));
+    if (code !== 0) {
+      terminateAll(`${scraperName} exited with code ${code}`);
+    }
   });
+
   scraper.on("error", (err) => {
     console.log(pc.red(`[-] Error running scraper ${scraperName}: ${err}`));
+    terminateAll(`Error in ${scraperName}`);
   });
+
+  subprocesses.push(scraper);
 }
 
 if (argv.amazon) {
-  runScraper(amazonPath);
+  runScraper("Amazon", amazonPath);
 }
 if (argv.zalando) {
-  runScraper(zalandoPath);
+  runScraper("Zalando", zalandoPath);
 }
 
 if (!argv.amazon && !argv.zalando) {

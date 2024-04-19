@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { sendZlndoMessageTelegram } from "../utils/telegramBot.mjs";
 import axios from "axios";
 import { capitalize } from "../utils/utils.js";
+import { time } from "node:console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +31,9 @@ async function login() {
     await page.goto("https://www.zalando.es/hombre-home/", {
       waitUntil: "domcontentloaded",
     });
-    const element = await page.$('button[data-testid="user-account-icon"]');
+    const element = await page.$('button[data-testid="user-account-icon"]', {
+      timeout: 10000,
+    });
     if (element) {
       await page.waitForSelector('button[data-testid="user-account-icon"]', {
         visible: true,
@@ -54,7 +57,7 @@ async function login() {
         console.log(
           pc.red("[-] Login failed, check your credentials and try again.")
         );
-        login();
+        //login();
       }
       logUpdate(pc.green("[+] Logged in successfully"));
 
@@ -235,12 +238,15 @@ async function main() {
       await page.goto("https://www.zalando.es/myaccount/?", {
         waitUntil: "networkidle2",
       });
+      await new Promise(function (resolve) {
+        setTimeout(resolve, 6000);
+      });
       await Promise.all([
         page.waitForNavigation(),
         page.click('a[data-testid="cart-link"]'),
       ]);
       await basketObserver(page);
-    }, 20000);
+    }, 50000);
   } catch (error) {
     console.log(pc.red("[-] Error in main: ", error));
   }

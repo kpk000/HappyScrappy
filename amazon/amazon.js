@@ -180,6 +180,6 @@ async function main() {
   setInterval(async () => {
     await page.reload({ waitUntil: "networkidle0" });
     await basketObserver(page);
-  }, 20000);
+  }, 40000);
 }
 main();
