@@ -41,7 +41,7 @@ async function login() {
         page.waitForNavigation(),
         page.click('button[data-testid="user-account-icon"]'),
       ]);
-      logUpdate(pc.yellow("[+] Trying to signin..."));
+      logUpdate(pc.yellow("[+] Trying to signin to Zalando..."));
 
       await page.waitForSelector("#login\\.email", { visible: true });
       await page.type("#login\\.email", ZALANDO_EMAIL);
@@ -58,7 +58,7 @@ async function login() {
         );
         //login();
       }
-      logUpdate(pc.green("[+] Logged in successfully"));
+      logUpdate(pc.green("[+] Logged in Zalando successfully"));
 
       await basketObserver();
     }
@@ -69,7 +69,7 @@ async function login() {
 
 async function basketObserver() {
   try {
-    logUpdate(pc.yellow("[+] Going to cart..."));
+    logUpdate(pc.yellow("[+] Going to Zalando's cart..."));
 
     await page.setRequestInterception(true);
     page.on("request", (interceptedRequest) => {
@@ -87,7 +87,7 @@ async function basketObserver() {
 
       return;
     });
-    logUpdate(pc.yellow("[+] Watching Zalando cart"));
+    logUpdate(pc.yellow("[+] Watching Zalando's cart"));
 
     await Promise.all([
       page.waitForNavigation(),
@@ -98,9 +98,12 @@ async function basketObserver() {
   }
 }
 
+let targetIntercepted = false;
+
 async function replicateRequestWithAxios(url, responseHeaders) {
+  if (targetIntercepted) return;
   if (!responseHeaders["x-xsrf-token"]) return;
-  logUpdate(pc.yellow("[+] Requesting zalando cart..."));
+  logUpdate(pc.yellow("[+] Requesting Zalando's cart..."));
   try {
     const response = await axios({
       method: "POST", // Cambia esto según el método necesario
@@ -112,14 +115,17 @@ async function replicateRequestWithAxios(url, responseHeaders) {
       await new Promise((resolve) => setTimeout(resolve, 40000));
       return;
     }
+    targetIntercepted = true;
 
     const data = response.data;
     if (data === null || typeof data !== "object") return;
     const newItems = parseData(data);
     await checkUpdates(newItems);
-    logUpdate(pc.yellow("[+] Cart updated"));
+    logUpdate(pc.yellow("[+] Zalando's cart updated"));
   } catch (error) {
     console.error(pc.red("[+] Error replicating request."), error);
+  } finally {
+    targetIntercepted = false;
   }
 }
 
@@ -186,7 +192,7 @@ async function checkUpdates(newItems) {
       oldItems = JSON.parse(data);
 
       if (Object.keys(oldItems).length === 0) {
-        logUpdate(pc.blue("[+] First time running, saving cart..."));
+        logUpdate(pc.blue("[+] First time running, saving Zalando's cart..."));
         const jsonData = JSON.stringify(newItems, null, 2);
 
         await fs.writeFile(jsonPath, jsonData);

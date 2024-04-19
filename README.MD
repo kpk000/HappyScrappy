@@ -21,7 +21,9 @@
 - **Telegram Bot**: Introduce your BOT TOKEN and CHAT ID in the `.env`.
 
 
-
+## Usage
+`pm2 start ./happyScrappy.js --name "happyScrappy" -- --amazon --zalando
+`
   
 
 

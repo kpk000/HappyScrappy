@@ -44,7 +44,7 @@ async function login() {
       page.waitForNavigation({ waitUntil: "domcontentloaded" }),
       page.click("#signInSubmit"),
     ]);
-    logUpdate(pc.yellow("[+] Logging in to amazon..."));
+    logUpdate(pc.yellow("[+] Logging in to Amazon..."));
     const errorLogin = await page.$("#auth-error-message-box");
     if (errorLogin) {
       console.log(
@@ -53,14 +53,14 @@ async function login() {
       browser.close();
       process.exit(1);
     } else {
-      logUpdate(pc.green("[+] Logged in amazon successfully"));
+      logUpdate(pc.green("[+] Logged in Amazon successfully"));
       await page.waitForSelector("#nav-cart", { visible: true });
       await Promise.all([
         page.waitForNavigation({ waitUntil: "domcontentloaded" }),
         page.click("#nav-cart"),
       ]);
 
-      logUpdate(pc.green("[+] Navigating to amazon cart"));
+      logUpdate(pc.green("[+] Navigating to Amazon's cart"));
       basketObserver();
     }
   } else {
@@ -70,7 +70,7 @@ async function login() {
 }
 
 async function basketObserver() {
-  logUpdate(pc.yellow("[+] Watching amazon cart"));
+  logUpdate(pc.yellow("[+] Watching Amazon's cart"));
   const items = await page.evaluate(() => {
     const basketItems = document.querySelectorAll('[data-itemtype="active"]');
     const wishlist = document.querySelectorAll('[data-itemtype="saved"]');
@@ -103,7 +103,7 @@ async function evaluateItems(newItems) {
     const data = await fs.readFile(jsonPath, "utf-8");
     const oldItems = JSON.parse(data);
     if (Object.keys(oldItems).length === 0) {
-      logUpdate(pc.green("[+] First time running, saving cart..."));
+      logUpdate(pc.green("[+] First time running, saving Amazon's cart..."));
       await fs.writeFile(jsonPath, JSON.stringify(newItems, null, 2));
       return;
     }
@@ -119,7 +119,7 @@ async function evaluateItems(newItems) {
     if (newItemsKeys.length !== oldItemsKeys.length) {
       logUpdate(
         pc.green(
-          `[+] Cart updated, ${Math.abs(
+          `[+] Amazon's cart updated, ${Math.abs(
             oldItemsKeys.length - newItemsKeys.length
           )} items removed or added.`
         )
@@ -138,7 +138,7 @@ function checkForChanges(oldItem, newItem) {
   const newItemKeys = Object.keys(newItem);
   oldItemKeys.forEach((key) => {
     if (oldItem[key] !== newItem[key]) {
-      logUpdate(pc.blue(`[+] ${oldItem.asin} : "${key}" has changed`));
+      logUpdate(pc.blue(`[+] Amazon ${oldItem.asin} : "${key}" has changed`));
       if (key === "price") {
         notifyPriceChange(oldItem, newItem);
       }
@@ -165,7 +165,7 @@ async function notifyPriceChange(oldItem, newItem) {
   if (res) {
     logUpdate(
       pc.green(
-        `[+] Price of item "${newItem.asin}" has change, notification sent.`
+        `[+] Amazon's price of item "${newItem.asin}" has change, notification sent.`
       )
     );
   } else {
