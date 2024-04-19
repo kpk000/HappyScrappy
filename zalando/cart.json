@@ -1,3 +1,42 @@
 {
- 
+  "0a1a1d4a-fea0-11ee-9b3b-77af6dc67f32": {
+    "id": "0a1a1d4a-fea0-11ee-9b3b-77af6dc67f32",
+    "name": "MOLLA - Pantalones deportivos - black",
+    "price": 29.95,
+    "badge": "EUR",
+    "stock": 10,
+    "img": "https://img01.ztat.net/article/spp-media-p1/06d9cfe633d44314bc528860a21a0b18/498784c4347d4831968950ccd6ad10d6.jpg?imwidth=303&filter=packshot",
+    "available": 10,
+    "link": "/ellesse-molla-shorts-black-el922f042-q11.html"
+  },
+  "24b26f44-fea0-11ee-b2d1-e9221102ea1a": {
+    "id": "24b26f44-fea0-11ee-b2d1-e9221102ea1a",
+    "name": "BASIC UNISEX - Shorts - black",
+    "price": 17.99,
+    "badge": "EUR",
+    "stock": 10,
+    "img": "https://img01.ztat.net/article/spp-media-p1/d8caee2574a74c72995af61515d197cb/52d7d0f52e79407eb26901511fff7a92.jpg?imwidth=303&filter=packshot",
+    "available": 10,
+    "link": "/yourturn-basic-unisex-shorts-black-yo12100ku-q11.html"
+  },
+  "cb07faef-fe5f-11ee-89a0-5958497ccd17": {
+    "id": "cb07faef-fe5f-11ee-89a0-5958497ccd17",
+    "name": "NORMALE PASSFORM ST ERNEY - Camiseta estampada - red",
+    "price": 19.9,
+    "badge": "EUR",
+    "stock": 10,
+    "img": "https://img01.ztat.net/article/spp-media-p1/3d2b93430fa34696866688c51f29e153/9d44ca81122740de91fd4f0125bdf739.jpg?imwidth=303&filter=packshot",
+    "available": 10,
+    "link": "/lonsdale-normale-passform-st-erney-camiseta-estampada-red-l2g22o005-g11.html"
+  },
+  "d03f49a6-fdcf-11ee-83fb-5359fbc11a94": {
+    "id": "d03f49a6-fdcf-11ee-83fb-5359fbc11a94",
+    "name": "Shorts - nero",
+    "price": 12.49,
+    "badge": "EUR",
+    "stock": 10,
+    "img": "https://img01.ztat.net/article/spp-media-p1/893fe966159b42169bfcdf6a617186de/d4e31da4734344f889d0ce24f86a5f94.jpg?imwidth=303&filter=packshot",
+    "available": 10,
+    "link": "/tezenis-shorts-nero-teg22f005-q11.html"
+  }
 }

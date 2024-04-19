@@ -11,7 +11,6 @@ import { fileURLToPath } from "node:url";
 import { sendZlndoMessageTelegram } from "../utils/telegramBot.mjs";
 import axios from "axios";
 import { capitalize } from "../utils/utils.js";
-import { time } from "node:console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,15 +100,21 @@ async function basketObserver() {
 
 async function replicateRequestWithAxios(url, responseHeaders) {
   if (!responseHeaders["x-xsrf-token"]) return;
-  logUpdate(pc.yellow("[+] Requesting cart..."));
+  logUpdate(pc.yellow("[+] Requesting zalando cart..."));
   try {
     const response = await axios({
       method: "POST", // Cambia esto según el método necesario
       url: url,
       headers: responseHeaders,
     });
+    if (response.status === 429) {
+      console.log(pc.red("[+] Rate limited, waiting..."));
+      await new Promise((resolve) => setTimeout(resolve, 40000));
+      return;
+    }
 
     const data = response.data;
+    if (data === null || typeof data !== "object") return;
     const newItems = parseData(data);
     await checkUpdates(newItems);
     logUpdate(pc.yellow("[+] Cart updated"));
@@ -124,7 +129,7 @@ function parseData(data) {
   data.groups?.forEach((group) => {
     group.articles.forEach((article, index) => {
       const articulo = {
-        id: article.item_ids[index],
+        id: article.item_ids[0],
         name: article.name.trim(),
         price: article.price.amount,
         badge: article.price.currency,
@@ -246,7 +251,7 @@ async function main() {
         page.click('a[data-testid="cart-link"]'),
       ]);
       await basketObserver(page);
-    }, 50000);
+    }, 60000);
   } catch (error) {
     console.log(pc.red("[-] Error in main: ", error));
   }

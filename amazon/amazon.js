@@ -32,7 +32,7 @@ async function login() {
   if (element) {
     await page.waitForSelector("#nav-link-accountList", { visible: true });
     await page.click("#nav-link-accountList");
-    logUpdate(pc.yellow("[+] Trying to signin..."));
+    logUpdate(pc.yellow("[+] Trying to signin to amazon..."));
 
     await page.waitForSelector("#ap_email", { visible: true });
     await page.type("#ap_email", AMAZON_EMAIL);
@@ -44,7 +44,7 @@ async function login() {
       page.waitForNavigation({ waitUntil: "domcontentloaded" }),
       page.click("#signInSubmit"),
     ]);
-    logUpdate(pc.yellow("[+] Logging in..."));
+    logUpdate(pc.yellow("[+] Logging in to amazon..."));
     const errorLogin = await page.$("#auth-error-message-box");
     if (errorLogin) {
       console.log(
@@ -53,18 +53,18 @@ async function login() {
       browser.close();
       process.exit(1);
     } else {
-      logUpdate(pc.green("[+] Logged in successfully"));
+      logUpdate(pc.green("[+] Logged in amazon successfully"));
       await page.waitForSelector("#nav-cart", { visible: true });
       await Promise.all([
         page.waitForNavigation({ waitUntil: "domcontentloaded" }),
         page.click("#nav-cart"),
       ]);
 
-      logUpdate(pc.green("[+] Navigating to cart"));
+      logUpdate(pc.green("[+] Navigating to amazon cart"));
       basketObserver();
     }
   } else {
-    logUpdate(pc.red("[-] Redirect found, trying again..."));
+    logUpdate(pc.red("[-] Redirect found to amazon, trying again..."));
     login();
   }
 }
