@@ -46,11 +46,11 @@ sudo npm install
 - `cd ./HappyScrappy`
 - `npm install`
 - Go to [zalando.js](./zalando/zalando.js),[amazon.js](./amazon/amazon.js),[zooplus.js](./zooplus/zooplus.js) files.
-- Delete for each file the line `executablePath: "/usr/bin/chromium-browser", //Delete this in Windows OS`, this line is to avoid errors executing in Unix Systems.
+- For each file, delete the line `executablePath: "/usr/bin/chromium-browser", // Delete this in Windows OS.` This line is included to avoid errors in Unix Systems.
 ----
 ## Setup
 - Create a `.env` file in the source directory.
-- Write for each of this variables the ones that you are gona use:
+- Enter the following variables that you will use:
 ```
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_BOT_ID= 
@@ -74,6 +74,8 @@ ZOOPLUS_PASSWORD=
 - Each argument is the scrapper that the main script `happyScript` is going to run. Delete the one that you don't need.
 - The main script has a functionality in which if one thread is terminated, all are terminated, this facilitates the integration with PM2, as we will see below.
 - This is not the correct way to run it, but it can be used for testing.
+- This mode does't make the tool have *persistence* when turning off the system, and is very probably that the execution is going to fail anytime.
+- Just for development and testing.
 
 #### PM2 (recommended way)
 *PM2 PM2 is an advanced process manager for NodeJS, it takes care of things like picking up scripts if they crash (that's why the tool is configured to kill all scripts if one crashes, so PM2 will instantiate them all), monitor them, run them when the system turns on...*
@@ -84,6 +86,8 @@ ZOOPLUS_PASSWORD=
 pm2 start happyScript.js --  --amazon --zalando --zooplus
 ```
 - Each argument is the scrapper that the main script `happyScript` is going to run. Delete the one that you don't need.
+
+#
 
 -  Execute the tool from the *PM2 config file* [ecosystem.config.cjs](ecosystem.config.cjs).
 - More about it's configuration: https://pm2.keymetrics.io/docs/usage/application-declaration/
