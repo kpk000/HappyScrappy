@@ -20,7 +20,7 @@ const { AMAZON_EMAIL, AMAZON_PASSWORD } = process.env;
 const browser = await puppeteer.launch({
   headless: true,
   slowMo: 10,
-  executablePath: "/usr/bin/chromium-browser",
+  executablePath: "/usr/bin/chromium-browser", //Delete this in Windows OS
 
   args: ["--start-maximized"],
 });
