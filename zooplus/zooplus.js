@@ -78,7 +78,10 @@ async function basketObserver() {
 
     await page.setRequestInterception(true);
     page.on("request", (interceptedRequest) => {
-      if (interceptedRequest.url().includes("/checkout/app/api/state/v1/get")) {
+      if (
+        interceptedRequest.url().includes("/checkout/app/api/state/v1/get") &&
+        !targetedIntercepted
+      ) {
         replicateRequestWithAxios(
           interceptedRequest.url(),
           interceptedRequest.headers()
@@ -118,16 +121,22 @@ async function replicateRequestWithAxios(url, responseHeaders) {
     }
 
     const data = response.data;
-    if (data === null || typeof data !== "object" || !data.cart.articles)
+    if (data === null || typeof data !== "object" || !data?.cart?.articles)
       return;
-
+    logUpdate(pc.blue("[+] Zooplus's cart received"));
     targetedIntercepted = true;
 
     const newItems = await parseData(data);
     await checkUpdates(newItems);
     logUpdate(pc.yellow("[+] Zooplus's cart updated"));
   } catch (error) {
-    console.error(pc.red("[+] Error replicating request."), error);
+    //Vlidate 503
+    if (error.response.status === 503) {
+      logUpdate(pc.red("[+] Error 503, trying again..."));
+      return;
+    } else {
+      console.error(pc.red("[+] Error replicating request."), error);
+    }
   } finally {
     targetedIntercepted = false;
   }
@@ -170,7 +179,12 @@ async function checkUpdates(newItems) {
         await fs.writeFile(jsonPath, jsonData);
       }
     } catch (error) {
-      console.error(pc.red("[+] Error reading JSON."), error);
+      if (
+        !error instanceof SyntaxError &&
+        !error.message.includes("Unexpected end of JSON input")
+      ) {
+        console.error(pc.red("[+] Error reading JSON."), error);
+      }
     }
 
     const newItemsKeys = Object.keys(newItems);
@@ -226,7 +240,7 @@ async function scheduleNextRun() {
       setTimeout(resolve, 15000);
     });
     await basketObserver(page);
-    setTimeout(next, 60000 * 2);
+    setTimeout(next, 10000);
   }
 }
 scheduleNextRun();

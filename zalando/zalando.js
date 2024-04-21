@@ -78,7 +78,10 @@ async function basketObserver() {
 
     await page.setRequestInterception(true);
     page.on("request", (interceptedRequest) => {
-      if (interceptedRequest.url().includes("/api/cart-gateway/carts")) {
+      if (
+        interceptedRequest.url().includes("/api/cart-gateway/carts") &&
+        !targetIntercepted
+      ) {
         if (interceptedRequest.headers()["x-xsrf-token"]) {
           replicateRequestWithAxios(
             interceptedRequest.url(),
@@ -294,7 +297,7 @@ async function scheduleNextRun() {
     });
 
     await basketObserver(page);
-    setTimeout(next, 10000);
+    setTimeout(next, 60000 * 2);
   }
 }
 scheduleNextRun();

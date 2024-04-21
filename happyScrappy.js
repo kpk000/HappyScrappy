@@ -78,7 +78,7 @@ if (argv.zooplus) {
   runScraper("Zooplus", zooplusPath);
 }
 
-if (!argv.amazon && !argv.zalando) {
+if (!argv.amazon && !argv.zalando && !argv.zooplus) {
   console.log(
     pc.red("[-] Nothing to do. Please specify a scraper to run, see --help.")
   );
