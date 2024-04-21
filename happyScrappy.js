@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const amazonPath = path.resolve(__dirname, "amazon", "amazon.js");
 const zalandoPath = path.resolve(__dirname, "zalando", "zalando.js");
+const zooplusPath = path.resolve(__dirname, "zooplus", "zooplus.js");
 
 const argv = yargs(hideBin(process.argv))
   .option("amazon", {
@@ -23,6 +24,12 @@ const argv = yargs(hideBin(process.argv))
     alias: "zaln",
     type: "boolean",
     description: "Execute the Zalando scraper",
+    default: false,
+  })
+  .option("zooplus", {
+    alias: "zoo",
+    type: "boolean",
+    description: "Execute the Zooplus scraper",
     default: false,
   })
   .help()
@@ -66,6 +73,9 @@ if (argv.amazon) {
 }
 if (argv.zalando) {
   runScraper("Zalando", zalandoPath);
+}
+if (argv.zooplus) {
+  runScraper("Zooplus", zooplusPath);
 }
 
 if (!argv.amazon && !argv.zalando) {

@@ -1,0 +1,48 @@
+{
+  "message": "Request failed with status code 429",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 429\n    at settle (file:///C:/Users/karim/Desktop/HappyScrappy/node_modules/axios/lib/core/settle.js:19:12)\n    at IncomingMessage.handleStreamEnd (file:///C:/Users/karim/Desktop/HappyScrappy/node_modules/axios/lib/adapters/http.js:589:11)\n    at IncomingMessage.emit (node:events:531:35)\n    at endReadableNT (node:internal/streams/readable:1696:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)\n    at Axios.request (file:///C:/Users/karim/Desktop/HappyScrappy/node_modules/axios/lib/core/Axios.js:45:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async replicateRequestWithAxios (file:///C:/Users/karim/Desktop/HappyScrappy/zalando/zalando.js:113:22)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "sec-ch-ua": "\"Google Chrome\";v=\"123\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"123\"",
+      "x-xsrf-token": "AAAAAIKg48irv2ViU8OUFjr3_UDCjZ_5elZDuQ0pV1W7eJM6N5EvRePxj9I3nmhiOeSpEhIyN1mg67JIX-UcpsqeOkHxZyVC9TPj6mjU0wBj7jw1tfq-AugQhvih6JDamcLcKL54wgLnruNkPH_EyFc=",
+      "accept-language": "en-US,en;q=0.9",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+      "viewport-width": "2087",
+      "referer": "https://www.zalando.es/myaccount/",
+      "dpr": "1.25",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "cookie": "frsx=AAAAAIKg48irv2ViU8OUFjr3_UDCjZ_5elZDuQ0pV1W7eJM6N5EvRePxj9I3nmhiOeSpEhIyN1mg67JIX-UcpsqeOkHxZyVC9TPj6mjU0wBj7jw1tfq-AugQhvih6JDamcLcKL54wgLnruNkPH_EyFc=; Zalando-Client-Id=476cec71-ff02-4ae7-8f55-1da8ca462084; mpulseinject=false; ncx=m; 0a1531d7-d1d0-4581-be07-437bdf2cda47=uc-version-1; language-preference=es; ak_bmsc=6539974E473C1FE2618956B429E2A40E~000000000000000000000000000000~YAAQCo4hF1wH9MuOAQAAEWH6/xeEPEmGXEgh6BZquTnP9S1cGrGf/+HeMx6vuScY36AP0gRBcC8PHUT+mxldNsLESmEfZ8Mhj27kdPNAcfkxM9KAqsL8im+wTvfRYIU4hnafxixNjj7FhQbiDcBMZE3yjlNi5vtPvwixmBChQAin6ZBQ6ksUDYNqu8q/4M6sYri4t64y1q3H4Z55wlw0H+5F7fAsQ9MkykZIVOkSdQ2L/O5VMkCzGAVgeFWsaze9s4X4RVmhlmiUcUguGwEApYw10jDPNtzBO7oHEhbTAkinmu9JeOMEyoTmE3UyvAFwYuTx7I6I6vMq1zdoNalFcu/osirGoci0veMqTR1SqktiazDI7dLLQYRmF99kzV8iCNbDnk2cVmqNvvneOUdM1tEtkDEZOQeg/RlQZ/F6wC82L3SuwF4K/VdY++4tXtXvSCynHbMgWIN3eryKVQ==; zsa=eyJraWQiOiJmVkM1LTFnR1dyVFF5QmlFQUpieE0tTGVKVnZkQmkzQ3MtQ2NjeXZqQ0hVIiwiZW5jIjoiQTEyOEdDTSIsInRhZyI6IlpfMXZBRGREMm0wWEpYR0VRVmFsSUEiLCJhbGciOiJBMTI4R0NNS1ciLCJpdiI6InJVdkdCSzAzMmxEakJQeHkifQ.kSgMYF9baMhXI2HjaOgahA.uV5lcrjRlXcAtRbW.UnclGDIYumZ-JhDPybsBEfS3dJv425rT5_vQLxoEznjFv60_pugIb_RK5z_wimP7duBJ6i4j8Z_lPOIWt_7XqDFr2rsy7YOILemgiG0an8S_8TnemY46W6sLD57Tm2iloyyPVben5tVNYCERcaCQpcR8CDIq32oV2jjxeKUWq0yPoNa0VFi6pgC3c_DP01SCo8IfttkeHgSDeOKSPn3kcPJwhSU6RhH_38DzLdJ88D4IW1YmV93xQ0QyCAQsInqZj73mSySv77vB5rHXimpUKZXxaIp8fYxq9qcWrQynADsSobVrDLlfAbKUV5iS9KCeCbq6UEcA_j050sGX5tNbs9ke3Qz9hGELV9Fb_TSQbz-gzRC3OqoGe4fkNs7T9wQKHwhLe05C0OsP-KmCevY1d3_97b4khlHtUZhkRyKUun9T6cLtlNLybzhLlaJtYhVimTACaxjw8gk.cGlUua5PF5FvJf_5fzhp_w; zsr=eyJraWQiOiJmVkM1LTFnR1dyVFF5QmlFQUpieE0tTGVKVnZkQmkzQ3MtQ2NjeXZqQ0hVIiwiZW5jIjoiQTEyOEdDTSIsInRhZyI6IkZQcmpUQ2JhaTRKazFGZUV6Njg1eHciLCJhbGciOiJBMTI4R0NNS1ciLCJpdiI6ImdTQWVFSEFvb3NTWFNaN1gifQ.6F0NDopxcKh9mXm6kGVkMA.vWlp9E8prX0W9VmV.uWfzBPC0W9sNuC-10HaCi8sv3ZLwLjHeDmK4J9tQRkAmvgcGir0o9xmB0DEctrZqo6gNbVHbmTrq-7Uw44_YxwQaEge-ZQ1raGBoGPIy5zpRTzY7BPxYsER5imbzJ8JrurSYuRm4eEgElV46Q7lQDto0V9xosoYLaKNQOFauqLl6Msl9oCTHxm5i291VnNxZTckGDHexDCd2wmD2fuzCKOxOrq6InLNReHR3Er8GbXChPam-cwaxNQPK0R9EkXUwSThqlYU9P0MTxVafwZSsSZq1ivtbc74MLSGlchoRf0kgQUbL.iNipvC5p0iC6T3EcJHl8tw; zsi=eyJraWQiOiJWcFRaOXpDeTdYUEMtRFhzdm9yOFVfdmpPc0ZIcHNic2ZzTDEzUFBrUFBJIiwiYWxnIjoiRVMyNTYifQ.eyJhdF9oYXNoIjoiUFA3eHBpa2syZ2lBUWxxTjI5TGlOUSIsInN1YiI6IjQ2MDI4ODk0MTUxMDAxIiwiaXNzIjoiaHR0cHM6Ly9hY2NvdW50cy56YWxhbmRvLmNvbSIsImdpdmVuX25hbWUiOiJLYXJpbSIsIm5vbmNlIjoiYTE2M2Y4ZmUtZWYwYy00YjVmLWE3YjYtZjYxMGRiYzU4YjhhIiwic2lkIjoiMjJlZmZhMmItNjc1Mi00MTE3LWEyYmYtZjNlNjMyOTlmOTljIiwiYXVkIjoiZmFzaGlvbi1zdG9yZS13ZWIiLCJhY3IiOiJodHRwczovL2N1c3RvbWVyLXNzby5kb2NzLnphbGFuZG8ubmV0L3BvbGljaWVzL3NlY2EiLCJhdXRoX3RpbWUiOjE3MTM2OTE1ODYsImV4cCI6MTcxMzY5NTE4NiwiaWF0IjoxNzEzNjkxNTg2LCJmYW1pbHlfbmFtZSI6IkFobWVkIiwiZW1haWwiOiJrYXJpbWNhcnJlbm81QGdtYWlsLmNvbSJ9.Cn9dtO1y3sD9LnZXeUmlVWWNS3rgmx_00Fnj0BGOhIjzn2e3YdRBVyf4Xh9zfNDWSvkW4QFtc1119Z0TsC72yA; bm_sz=E9934CDD3E51AC428542BF3B012E260E~YAAQCo4hFyMP9MuOAQAAf+38/xdrJswibqe4uqc1+QZZh9mt3UX2krUrO53jqn44dankky+NBiOqXClFmC5H6hbOelJLQWwcgWwcD88f2A5Q2W1i4AzMrkc/9p8V/eOIURG3NC2ps7bXfXmQTLGd6aZFJ8c7cZbQsM99NK8X17nn8nkcocB+88QiyhYc0GczwgPHLcoGB2ud6R9yoztunrtYMyNrrp9uqahH80ZoORoZi39rEq99mOV1kWe8iZ5zmMVstNv6eoOU1j3BVYRJ6OkJ3TQA8glQ3vnJHIeqWE2rnUe/XcnRYHhn03hQcNhaTA8/6guhb5IiZ16/rZuQjkVqtbrx1yyqQhdHqBYIE0Ico1AHleQrk84MllGYctKEN6K/Ww6dWaOyP4MZU8x6rRptZC0N6J22yMbS5rMr+LoRRvnYN3EZ4cbR+CLbWm2qqljiUieDpuJd1aqK42ZPlw5hC3N82H/0w2kFThxMQZ2dpzC8EkVc7LCIrec0iVx5goLiiVkHhU+sPiYbKn99XAbN6rk4mWzSw73nR+MDszgZ+i5Q~4404021~4538933; _abck=56F3450C5C230AAF3EE25343142629C9~-1~YAAQCo4hF0MP9MuOAQAAI/P8/wud9OBpBpwHp8CO1hb+b3KyXYT4U1JYRvUMRi79kPtlb7KSJRPD7ttEBJx7+tNALszY0QV9aomrV/KGlynx1JAei2u66JGif7lqLZJTpQBVVSRCDxjFwS5/VoCZC0u4/43IjDTSa90QvTr3SiCHHajoZHu3DBS6KNLY4mZTRZl1ke1vD7TAd1odYuyvmT6El+2oSz98LE0Q5YhHWXSGQrllpgA3JVZuaqYe04xPTjFTbAO3QCzJEjL4S9tzxG4jCoXaqxDaWiSZnlndm3jhz86RHUAeS91YRIpOq9CSHjWiIfDCoMcSya0cB13ybd/qSxj1rsQ0NDmr0Y2CXKAqL2XtROlVwGEceDG65SGlKcsKOQzu07qpEvHE6mvqK/0q/5UYqKF5xbm1NZFJJ9NW0XBgBUVFK930c3Y4egvNiPQr4K2r1IiLXavR4MscE27ob/JayZbd9BedleKf+38=~-1~-1~-1",
+      "origin": "https://www.zalando.es",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "method": "post",
+    "url": "https://www.zalando.es/api/cart-gateway/carts"
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 429
+}

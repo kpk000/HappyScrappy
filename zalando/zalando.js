@@ -10,7 +10,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sendZlndoMessageTelegram } from "../utils/telegramBot.mjs";
 import axios from "axios";
-import { capitalize } from "../utils/utils.js";
+import { capitalize, isValidJSON } from "../utils/utils.js";
+import { log } from "node:console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +52,9 @@ async function login() {
         page.click('button[data-testid="login_button"]'),
       ]);
 
-      const cartButton = await page.$('a[data-testid="cart-link"]');
+      const cartButton = await page.$('a[data-testid="cart-link"]', {
+        timeout: 30000,
+      });
       if (!cartButton) {
         console.log(
           pc.red("[-] Login failed, check your credentials and try again.")
@@ -69,6 +72,8 @@ async function login() {
 
 async function basketObserver() {
   try {
+    if (targetIntercepted) return;
+
     logUpdate(pc.yellow("[+] Going to Zalando's cart..."));
 
     await page.setRequestInterception(true);
@@ -110,22 +115,48 @@ async function replicateRequestWithAxios(url, responseHeaders) {
       url: url,
       headers: responseHeaders,
     });
-    if (response.status === 429) {
-      console.log(pc.red("[+] Rate limited, waiting..."));
-      await new Promise((resolve) => setTimeout(resolve, 40000));
+
+    const data = response.data;
+    if (data === null || typeof data !== "object" || !data.id) {
+      console.log(
+        pc.red("[+] Bad response from Zalando's cart...Trying again.")
+      );
       return;
     }
     targetIntercepted = true;
 
-    const data = response.data;
-    if (data === null || typeof data !== "object") return;
+    logUpdate(pc.green("[+] Zalando's cart received"));
     const newItems = parseData(data);
     await checkUpdates(newItems);
     logUpdate(pc.yellow("[+] Zalando's cart updated"));
   } catch (error) {
-    console.error(pc.red("[+] Error replicating request."), error);
-  } finally {
-    targetIntercepted = false;
+    console.error(
+      pc.red("[-] Error replicating request."),
+      error?.response?.status
+    );
+    if (error?.response && error?.response?.status === 429) {
+      console.log(
+        pc.yellow("[-] Rate limit exceeded, waiting for retry-after header")
+      ); //DEBUG
+      if (error.response.headers["retry-after"]) {
+        const retryAfterSeconds = parseInt(
+          error.response.headers["retry-after"]
+        );
+        const message = `Rate limit exceeded, waiting for ${retryAfterSeconds} seconds`;
+        logUpdate(pc.blue(message));
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, retryAfterSeconds * 1000)
+        );
+        return;
+      }
+    } else if (
+      error?.response &&
+      (error?.response?.status === 401 || error?.response?.status === 403)
+    ) {
+      console.log(pc.red("[-] Unauthorized, logging in again"));
+      await login();
+    }
   }
 }
 
@@ -189,7 +220,7 @@ async function checkUpdates(newItems) {
     let oldItems = {};
     try {
       const data = await fs.readFile(jsonPath, "utf-8");
-      oldItems = JSON.parse(data);
+      oldItems = await JSON.parse(data);
 
       if (Object.keys(oldItems).length === 0) {
         logUpdate(pc.blue("[+] First time running, saving Zalando's cart..."));
@@ -198,7 +229,12 @@ async function checkUpdates(newItems) {
         await fs.writeFile(jsonPath, jsonData);
       }
     } catch (error) {
-      console.error(pc.red("[+] Error reading JSON."), error);
+      if (
+        !error instanceof SyntaxError &&
+        !error.message.includes("Unexpected end of JSON input")
+      ) {
+        console.error(pc.red("[+] Error reading JSON."), error);
+      }
     }
 
     const newItemsKeys = Object.keys(newItems);
@@ -214,7 +250,9 @@ async function checkUpdates(newItems) {
   }
 }
 
+let messageSent = false;
 async function checkForChanges(oldItem, newItem) {
+  if (messageSent) return;
   const oldItemKeys = Object.keys(oldItem);
   const newItemKeys = Object.keys(newItem);
   const relevantKeys = ["stock", "price"];
@@ -237,29 +275,26 @@ async function checkForChanges(oldItem, newItem) {
       `);
     }
   });
+
   for (let i = 0; i < messages.length; i++) {
     await sendZlndoMessageTelegram(messages[i], newItem.img);
+    messageSent = true;
   }
 }
 
-async function main() {
-  try {
-    await login();
-    setInterval(async () => {
-      await page.goto("https://www.zalando.es/myaccount/?", {
-        waitUntil: "networkidle2",
-      });
-      await new Promise(function (resolve) {
-        setTimeout(resolve, 6000);
-      });
-      await Promise.all([
-        page.waitForNavigation(),
-        page.click('a[data-testid="cart-link"]'),
-      ]);
-      await basketObserver(page);
-    }, 60000);
-  } catch (error) {
-    console.log(pc.red("[-] Error in main: ", error));
+async function scheduleNextRun() {
+  await login();
+  await next();
+  async function next() {
+    targetIntercepted = false;
+    messageSent = false;
+    await page.click('a[href="/myaccount/"]');
+    await new Promise(function (resolve) {
+      setTimeout(resolve, 6000);
+    });
+
+    await basketObserver(page);
+    setTimeout(next, 10000);
   }
 }
-main();
+scheduleNextRun();
