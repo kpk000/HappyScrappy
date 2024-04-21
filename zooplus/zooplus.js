@@ -21,6 +21,7 @@ const { ZOOPLUS_EMAIL, ZOOPLUS_PASSWORD } = process.env;
 const browser = await puppeteer.launch({
   headless: true,
   slowMo: 10,
+  executablePath: "/usr/bin/chromium-browser",
 
   args: ["--start-maximized"],
 });
