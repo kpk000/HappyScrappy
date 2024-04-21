@@ -32,9 +32,10 @@ async function login() {
   try {
     await page.goto("https://www.zooplus.es/", {
       waitUntil: "networkidle0",
+      timeout: 60000 * 2,
     });
     const element = await page.$("#onetrust-accept-btn-handler", {
-      timeout: 1000,
+      timeout: 2000,
     });
     if (element) {
       await page.click("#onetrust-accept-btn-handler");
@@ -53,8 +54,8 @@ async function login() {
       page.waitForNavigation("networkidle0"),
     ]);
 
-    const errorFound = await page.$(".form-message-text", { timeout: 10000 });
-    const errorMs = await page.$("#usernameErrorMessage", { timeout: 10000 });
+    const errorFound = await page.$(".form-message-text", { timeout: 20000 });
+    const errorMs = await page.$("#usernameErrorMessage", { timeout: 20000 });
 
     if (errorFound || errorMs) {
       logUpdate(
@@ -98,7 +99,7 @@ async function basketObserver() {
       visible: true,
     });
     await Promise.all([
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      page.waitForNavigation({ waitUntil: "networkidle0", timeout: 60000 * 2 }),
       page.click('a[href="/checkout/overview"]'),
     ]);
   } catch (e) {
@@ -236,12 +237,13 @@ async function scheduleNextRun() {
     logUpdate(pc.yellow("[+] Restarting Zooplus's cart..."));
     await page.goto("https://www.zooplus.es/account/overview", {
       waitUntil: "networkidle0",
+      timeout: 60000 * 2,
     });
     await new Promise(function (resolve) {
       setTimeout(resolve, 15000);
     });
     await basketObserver(page);
-    setTimeout(next, 10000);
+    setTimeout(next, 60000 * 2);
   }
 }
 scheduleNextRun();
